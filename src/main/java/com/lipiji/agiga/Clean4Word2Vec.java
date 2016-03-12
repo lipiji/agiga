@@ -17,7 +17,7 @@ public class Clean4Word2Vec {
         AgigaPrefs prefs = new AgigaPrefs();
         prefs.setAll(true);
         
-        
+       
         String sources[] = {"AFP", "APW", "CNA", "LTW", "NYT", "WPB", "XIN"};
         
         try (BufferedWriter out = new BufferedWriter(new FileWriter(target))) {
