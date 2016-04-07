@@ -57,7 +57,7 @@ public class Clean4SDS {
         badWords.put("-rrb-", 0);
     }
     
-    private static boolean isBad(String hl) {
+    private static boolean isGood(String hl) {
         if (StringUtils.isBlank(hl)) {
             return false;
         }
@@ -71,7 +71,6 @@ public class Clean4SDS {
             }
         }
         
-        
         return true;
     }
     
@@ -84,6 +83,7 @@ public class Clean4SDS {
         
         
         String sources[] = {"AFP", "APW", "CNA", "LTW", "NYT", "WPB", "XIN"};
+        //String sources[] = {"APW"};
         
         ExecutorService pool = Executors.newFixedThreadPool(8);
         
@@ -104,12 +104,17 @@ public class Clean4SDS {
                                 i++;
                                 System.out.println(source + ": " + i + " / " + files.length);
                                 String year = fname.substring(0, fname.length() - 9);
-                                print4Word2Vec(dSource + fname, target + source
-                                        + "/" + year + "/", prefs);
+                                try {
+                                    print4Word2Vec(dSource + fname, target + source + "/" + year + "/", prefs);
+                                } catch (Exception e) {
+                                    System.out.println(source + ":" + fname);
+                                    e.printStackTrace();
+                                    continue;
+                                }
                             }
                         }
                         Thread.sleep(0);
-                    } catch (InterruptedException | IOException e) {
+                    } catch (Exception  e) {
                         e.printStackTrace();
                     }
                 }
@@ -145,7 +150,7 @@ public class Clean4SDS {
         for (AgigaDocument doc : reader) {
             //System.out.println();
             String hl = getHeadlineText(doc.getHeadline());
-            if (isBad(hl.toLowerCase())) {
+            if (!isGood(hl.toLowerCase())) {
                 continue;
             }
 
